@@ -1,4 +1,4 @@
-import { json, urlencoded } from "express";
+import { json, urlencoded, type Application } from "express";
 
 // ℹ️ Logs incoming requests and responses to the terminal (useful for debugging)
 import logger from "morgan";
@@ -8,14 +8,14 @@ import logger from "morgan";
 import cors from "cors";
 
 // Middleware configuration
-function config(app) {
+function config(app: Application) {
   // ℹ️ Enables Express to trust reverse proxies (e.g., when deployed behind services like Heroku or Vercel)
   app.set("trust proxy", 1);
   
   // ℹ️ Configures CORS to allow requests only from the specified origin
   app.use(
     cors({
-      origin: [process.env.ORIGIN]
+      origin: [process.env.ORIGIN ?? "*"]
     })
   );
   
