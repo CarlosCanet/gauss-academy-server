@@ -9,7 +9,7 @@ try {
   }
 }
 import "./config/instrument.js"
-import * as Sentry from "@sentry/node";
+// import * as Sentry from "@sentry/node";
 import express, { type Application } from "express";
 import config from "./config/index.js";
 import indexRouter from "./routes/index.routes.js";
@@ -31,7 +31,7 @@ config(app);
 app.use("/api", indexRouter);
 
 // ❗ Centralized error handling (must be placed after routes)
-Sentry.setupExpressErrorHandler(app);
+//Sentry.setupExpressErrorHandler(app);
 handleErrors(app);
 
 // 🆗 Starts the server

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import authRouter from "./auth.routes.js";
 const router = Router();
 
 // ℹ️ Test Route. Can be left and used for waking up the server if idle
@@ -9,5 +10,8 @@ router.get("/", (_req, res, _next) => {
 router.get("/debug-sentry", (_req, _res) => {
   throw new Error("My first Sentry error!");
 });
+
+// Middlewares
+router.use("/auth", authRouter);
 
 export default router;

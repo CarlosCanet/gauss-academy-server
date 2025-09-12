@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import type { Response, NextFunction } from "express";
-import type { AuthenticatedRequest, JwtPayload } from "../types.js";
+import type { AuthenticatedRequest, GaussJwtPayload } from "../types.js";
 
 export function validateToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   try {
@@ -24,7 +24,7 @@ export function validateToken(req: AuthenticatedRequest, res: Response, next: Ne
       return res.status(500).json({ errorMessage: "There is a problem with the server. Please contact with us" });
     }
 
-    const payload = jwt.verify(authToken, process.env.TOKEN_SECRET_KEY) as JwtPayload;
+    const payload = jwt.verify(authToken, process.env.TOKEN_SECRET_KEY) as GaussJwtPayload;
     req.payload = payload;
     next();
   } catch (error: unknown) {
@@ -32,3 +32,21 @@ export function validateToken(req: AuthenticatedRequest, res: Response, next: Ne
     res.status(401).json({ errorMessage: "Token not send or is invalid" });
   }
 }
+
+function requireRole(role: string) {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    if (!req.payload) {
+      res.status(401).json({ errorMessage: "Authentication failed. No token payload found." });
+      return;
+    }
+    if (req.payload.role !== role) {
+      res.status(403).json({ errorMessage: `Access denied. You must be ${role}` });
+      return;
+    }
+    next();
+  };
+}
+
+export const validateTeacherRole = requireRole("Teacher");
+export const validateStaffRole = requireRole("Staff");
+export const validateAdminRole = requireRole("Admin");

@@ -7,6 +7,9 @@ const enrollmentSchema = new Schema(
     startDate: Date,
     endDate: Date,
     discountPercent: Number
+  },
+  {
+    timestamps: true,
   }
 );
 
