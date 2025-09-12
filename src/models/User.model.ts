@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { Schema, model } from "mongoose";
 const studentSchema = new Schema({
   marketingConsent: Boolean,
@@ -79,6 +80,12 @@ const userSchema = new Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre("save", async function(next) {
+  const hashedPassword = await bcrypt.hash(this.password, 12);
+  this.password = hashedPassword;
+  next();
+})
 
 const User = model("User", userSchema);
 

@@ -8,7 +8,7 @@ try {
     console.warn(".env file not found, using default environment values");
   }
 }
-import "./config/instrument.js"
+// import "./config/instrument.js"
 // import * as Sentry from "@sentry/node";
 import express, { type Application } from "express";
 import config from "./config/index.js";
