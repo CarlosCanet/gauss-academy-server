@@ -33,20 +33,23 @@ export function validateToken(req: AuthenticatedRequest, res: Response, next: Ne
   }
 }
 
-function requireRole(role: string) {
+function requireRoles(roles: string[]) {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     if (!req.payload) {
       res.status(401).json({ errorMessage: "Authentication failed. No token payload found." });
       return;
     }
-    if (req.payload.role !== role) {
-      res.status(403).json({ errorMessage: `Access denied. You must be ${role}` });
+    if (!roles.includes(req.payload.role)) {
+      res.status(403).json({ errorMessage: `Access denied. Required role(s): ${roles.join(", ")}` });
       return;
     }
     next();
   };
 }
 
-export const validateTeacherRole = requireRole("Teacher");
-export const validateStaffRole = requireRole("Staff");
-export const validateAdminRole = requireRole("Admin");
+export const validateTeacherRole = requireRoles(["Teacher"]);
+export const validateStaffRole = requireRoles(["Staff"]);
+export const validateAdminRole = requireRoles(["Admin"]);
+
+export const validateTeacherOrStaffOrAdminRole = requireRoles(["Teacher", "Staff", "Admin"]);
+export const validateStaffOrAdminRole = requireRoles(["Staff", "Admin"]);
