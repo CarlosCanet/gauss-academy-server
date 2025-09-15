@@ -1,0 +1,17 @@
+import { Schema, model } from "mongoose";
+
+const enrollmentSchema = new Schema(
+  {
+    student: { type: Schema.Types.ObjectId, ref: "User" },
+    course: { type: Schema.Types.ObjectId, ref: "Course" },
+    endDate: Date,
+    discountPercent: Number
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const Enrollment = model("Enrollment", enrollmentSchema);
+
+export default Enrollment;

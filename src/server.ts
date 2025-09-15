@@ -1,11 +1,16 @@
 // ℹ️ Loads environment variables from a .env file into process.env
 try {
-  process.loadEnvFile()
-} catch(error) {
-  console.warn(".env file not found, using default environment values")
+  process.loadEnvFile();
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.warn(".env file not found, using default environment values", error.message);
+  } else {
+    console.warn(".env file not found, using default environment values");
+  }
 }
-
-import express from "express";
+// import "./config/instrument.js"
+// import * as Sentry from "@sentry/node";
+import express, { type Application } from "express";
 import config from "./config/index.js";
 import indexRouter from "./routes/index.routes.js";
 import handleErrors from "./errors/index.js";
@@ -15,7 +20,7 @@ import initMongoose from "./db/index.js";
 initMongoose();
 
 // Imports Express (a Node.js framework for handling HTTP requests) and initializes the server
-const app = express();
+const app: Application = express();
 // ℹ️ Defines the server port (default: 5005)
 const PORT = process.env.PORT || 5005;
 
@@ -26,6 +31,7 @@ config(app);
 app.use("/api", indexRouter);
 
 // ❗ Centralized error handling (must be placed after routes)
+//Sentry.setupExpressErrorHandler(app);
 handleErrors(app);
 
 // 🆗 Starts the server
