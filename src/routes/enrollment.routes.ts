@@ -4,10 +4,10 @@ import type { AuthenticatedRequest } from "../types.js";
 import Enrollment from "../models/Enrollment.model.js";
 const enrollmentRouter = Router();
 
-// GET - /api/enrollment/course/:courseId -  Get all enrollments for a course
+// GET - /api/enrollment/course/:courseId -  List all enrollments for a course
 enrollmentRouter.get("/course/:courseId", validateToken, validateTeacherOrStaffOrAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const foundEnrollment = await Enrollment.find({ course: req.params.courseId });
+    const foundEnrollment = await Enrollment.find({ course: req.params.courseId }).populate("student");
     res.status(200).json(foundEnrollment);
   } catch (error: unknown) {
     console.log(error);
@@ -15,10 +15,24 @@ enrollmentRouter.get("/course/:courseId", validateToken, validateTeacherOrStaffO
   }
 });
 
-// GET - /api/class/:classId - List a class info
+// GET - /api/enrollment/my-enrollments - List all my enrollments
+enrollmentRouter.get("/my-enrollments", validateToken, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    if (!req.payload) {
+      return res.status(400).json({ errorMessage: "Token payload missing" });
+    }
+    const foundUser = await Enrollment.find({student: req.payload.userId}).populate("course");
+    res.status(200).json(foundUser);
+  } catch (error: unknown) {
+    console.log(error);
+    next(error);
+  }
+});
+
+// GET - /api/enrollment/:enrollmentId - List an enrollment info
 enrollmentRouter.get("/:enrollmentId", validateToken, validateTeacherOrStaffOrAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const foundEnrollment = await Enrollment.findById(req.params.enrollmentId);
+    const foundEnrollment = await Enrollment.findById(req.params.enrollmentId).populate("student").populate("course");
     res.status(200).json(foundEnrollment);
   } catch (error: unknown) {
     console.log(error);

@@ -2,6 +2,7 @@ import { Router, type Response, type NextFunction } from "express";
 import User from "../models/User.model.js";
 import { validateAdminRole, validateToken } from "../middlewares/auth.middlewares.js";
 import type { AuthenticatedRequest } from "../types.js";
+import Enrollment from "../models/Enrollment.model.js";
 const userRouter = Router();
 
 // GET - /api/user - List all users
@@ -16,8 +17,13 @@ userRouter.get("/", validateToken, validateAdminRole, async (_req: Authenticated
 });
 
 // GET - /api/user/students - List all students
-userRouter.get("/students", validateToken, validateAdminRole, async (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+// GET - /api/user/students?enrollment=active - List all students enrolled
+userRouter.get("/students", validateToken, validateAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
+    if (req.query.enrollment && req.query.enrollment === "active") {
+      const activeStudents = await Enrollment.find({ $or: [{ endDate: { $gt: new Date() } }, { endDate: { $exists: false } }] });
+      return res.status(200).json(activeStudents);
+    }
     const students = await User.find({ role: "Student" });
     res.status(200).json(students);
   } catch (error: unknown) {
@@ -25,10 +31,6 @@ userRouter.get("/students", validateToken, validateAdminRole, async (_req: Authe
     next(error);
   }
 });
-
-// GET - /api/user/students?enrollment=active - List all students enrolled
-
-// GET - /api/user/students/:courseId - List all students in a course
 
 // GET - /api/user/teachers - List all teachers
 userRouter.get("/teachers", validateToken, validateAdminRole, async (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {

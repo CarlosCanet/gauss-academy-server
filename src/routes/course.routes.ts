@@ -5,11 +5,11 @@ import Course from "../models/Course.model.js";
 const courseRouter = Router();
 
 // GET - /api/course - List all courses
-// GET - /api/course?status=active - List all active courses
+// GET - /api/course?status=active - List all active courses or pending or whatever
 courseRouter.get("/", validateToken, validateAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     if (req.query.status) {
-      const activeCourses = await Course.find({ status: "active" });
+      const activeCourses = await Course.find({ status: req.query.status });
       return res.status(200).json(activeCourses);
     }
     const allCourses = await Course.find();
