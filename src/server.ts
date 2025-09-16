@@ -14,10 +14,10 @@ import express, { type Application } from "express";
 import config from "./config/index.js";
 import indexRouter from "./routes/index.routes.js";
 import handleErrors from "./errors/index.js";
-import initMongoose from "./db/index.js";
+import connectDB from "./db/index.js";
 
 // ℹ️ Establishes a connection to the database
-initMongoose();
+connectDB();
 
 // Imports Express (a Node.js framework for handling HTTP requests) and initializes the server
 const app: Application = express();

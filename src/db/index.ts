@@ -2,7 +2,7 @@
 import { connect } from "mongoose";
 
 // ℹ️ Connects to MongoDB using the URI from environment variables.
-async function initMongoose() {
+async function connectDB() {
   try {
     const response = await connect(process.env.MONGODB_URI ?? "");
     if (response && response.connections[0]) {
@@ -15,4 +15,4 @@ async function initMongoose() {
   }
 }
 
-export default initMongoose;
+export default connectDB;
