@@ -16,18 +16,6 @@ userRouter.get("/", validateToken, validateAdminRole, async (_req: Authenticated
   }
 });
 
-// GET - /api/user/:userId - Get an user info
-userRouter.get("/:userId", validateToken, validateAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  try {
-    const foundUser = await User.findById(req.params.userId);
-    res.status(200).json(foundUser);
-  } catch (error: unknown) {
-    console.log(error);
-    next(error);
-  }
-});
-
-
 // GET - /api/user/students - List all students
 // GET - /api/user/students?enrollment=active - List all students enrolled
 userRouter.get("/students", validateToken, validateAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -125,6 +113,17 @@ userRouter.put("/profile", validateToken, async (req: AuthenticatedRequest, res:
 userRouter.patch("/:userId/role/:newRole", validateToken, validateAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const foundUser = await User.findByIdAndUpdate(req.params.userId, { role: req.params.newRole });
+    res.status(200).json(foundUser);
+  } catch (error: unknown) {
+    console.log(error);
+    next(error);
+  }
+});
+
+// GET - /api/user/:userId - Get an user info
+userRouter.get("/:userId", validateToken, validateAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    const foundUser = await User.findById(req.params.userId);
     res.status(200).json(foundUser);
   } catch (error: unknown) {
     console.log(error);
