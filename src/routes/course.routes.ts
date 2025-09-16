@@ -20,6 +20,39 @@ courseRouter.get("/", validateToken, validateAdminRole, async (req: Authenticate
   }
 });
 
+// GET - /api/course/info - List the public info from all active courses
+courseRouter.get("/info", async (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    const allCourses = await Course.find({ status: { $in: ["Planned", "Active"] } }, "name status startDate degreeNames numberOfHouse price");
+    res.status(200).json(allCourses);
+  } catch (error: unknown) {
+    console.log(error);
+    next(error);
+  }
+});
+
+// GET - /api/course/info/:courseId - List the public info from a course
+courseRouter.get("/info/:courseId", async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    const allCourses = await Course.findById(req.params.courseId, "name status startDate degreeNames numberOfHouse price");
+    res.status(200).json(allCourses);
+  } catch (error: unknown) {
+    console.log(error);
+    next(error);
+  }
+});
+
+// GET - /api/course/:courseId - List a course info
+courseRouter.get("/:courseId", validateToken, validateAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    const allCourses = await Course.findById(req.params.courseId);
+    res.status(200).json(allCourses);
+  } catch (error: unknown) {
+    console.log(error);
+    next(error);
+  }
+});
+
 // POST - /api/course - Create a new course
 courseRouter.post("/", validateToken, validateAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const { name, imageUrl, degreeNames, startDate, endDate, numberOfHours, teachers, classes, price } = req.body;

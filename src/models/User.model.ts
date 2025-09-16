@@ -16,6 +16,7 @@ const staffSchema = new Schema({
 });
 
 const teacherSchema = new Schema({
+  description: { type: String, required: true },
   previousCourse: [{ type: Schema.Types.ObjectId, ref: "Course" }],
   activeCourse: [{ type: Schema.Types.ObjectId, ref: "Course" }],
 });
