@@ -1,13 +1,6 @@
 // ℹ️ Loads environment variables from a .env file into process.env
-try {
-  process.loadEnvFile();
-} catch (error: unknown) {
-  if (error instanceof Error) {
-    console.warn(".env file not found, using default environment values", error.message);
-  } else {
-    console.warn(".env file not found, using default environment values");
-  }
-}
+import 'dotenv/config'
+
 // import "./config/instrument.js"
 // import * as Sentry from "@sentry/node";
 import express, { type Application } from "express";
@@ -15,6 +8,7 @@ import config from "./config/index.js";
 import indexRouter from "./routes/index.routes.js";
 import handleErrors from "./errors/index.js";
 import connectDB from "./db/index.js";
+
 
 // ℹ️ Establishes a connection to the database
 connectDB();
