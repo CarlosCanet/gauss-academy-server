@@ -62,7 +62,7 @@ const userSchema = new Schema(
       }
     },
     mobileNumber: {
-      type: Number,
+      type: String,
       required: [true, "Mobile number is required"],
     },
     profileImageUrl: {type: String, match: [/([a-z0-9_-]{1,5}:\/\/)?(([a-z0-9_-]{1,}):([a-z0-9_-]{1,})@)?((www\.)|([a-z0-9_-]{1,}\.)+)?([a-z0-9_-]{3,})(\.[a-z]{2,4})(\/([a-z0-9_-]{1,}\/)+)?([a-z0-9_-]{1,})?(\.[a-z]{2,})?(\?)?(((&)?[a-z0-9_-]{1,}(=[a-z0-9_-]{1,})?)+)?/gi, "That url has some mistakes"]},

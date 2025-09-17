@@ -6,7 +6,7 @@ const courseRouter = Router();
 
 // GET - /api/course - List all courses
 // GET - /api/course?status=active - List all active courses or pending or whatever
-courseRouter.get("/", validateToken, validateAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+courseRouter.get("/", validateToken, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     if (req.query.status) {
       const activeCourses = await Course.find({ status: req.query.status });
@@ -43,7 +43,7 @@ courseRouter.get("/info/:courseId", async (req: AuthenticatedRequest, res: Respo
 });
 
 // GET - /api/course/:courseId - List a course info
-courseRouter.get("/:courseId", validateToken, validateAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+courseRouter.get("/:courseId", validateToken, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const allCourses = await Course.findById(req.params.courseId);
     res.status(200).json(allCourses);
