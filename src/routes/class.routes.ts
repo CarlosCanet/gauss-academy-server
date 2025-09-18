@@ -5,7 +5,7 @@ import Class from "../models/Class.model.js";
 const classRouter = Router();
 
 // GET- /api/class/course/:courseId - List all classes from a course
-classRouter.get("/course/:courseId", validateToken, validateTeacherOrStaffOrAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+classRouter.get("/course/:courseId", validateToken, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const foundClass = await Class.find({ course: req.params.courseId }).populate("course", "name");
     res.status(200).json(foundClass);
