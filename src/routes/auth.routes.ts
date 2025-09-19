@@ -14,9 +14,8 @@ authRouter.post("/signup", async (req: Request, res: Response, next: NextFunctio
     res.sendStatus(201);
   } catch (error) {
     console.log(error);
-    if (error && typeof error === "object" &&  "name" in error && error.name === "ValidationError" && "errors" in error && typeof error.errors === "object" && error.errors) {
-      const messages = Object.values(error.errors).map(err => err.message);
-      return res.status(400).json({ errorMessages: messages });
+    if (error && typeof error === "object" && "name" in error && error.name === "ValidationError" && "errors" in error && typeof error.errors === "object" && error.errors) {
+      return res.status(400).json(error.errors);
     }
     next(error);
   }

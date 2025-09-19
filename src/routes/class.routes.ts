@@ -4,10 +4,10 @@ import type { AuthenticatedRequest } from "../types.js";
 import Class from "../models/Class.model.js";
 const classRouter = Router();
 
-// GET- /api/class/:courseId - List all classes from a course
-classRouter.get("/:courseId", validateToken, validateTeacherOrStaffOrAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+// GET- /api/class/course/:courseId - List all classes from a course
+classRouter.get("/course/:courseId", validateToken, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const foundClass = await Class.find({ course: req.params.courseId });
+    const foundClass = await Class.find({ course: req.params.courseId }).populate("course", "name");
     res.status(200).json(foundClass);
   } catch (error: unknown) {
     console.log(error);
@@ -30,7 +30,7 @@ classRouter.get("/:classId", validateToken, validateTeacherOrStaffOrAdminRole, a
 classRouter.post("/:courseId", validateToken, validateTeacherOrStaffOrAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const { course, teachers, numberOfHours, date, type, onlineUrl, classroomName } = req.body;
   try {
-    const foundClass = await Class.create({ course, teachers, numberOfHours, date, type, onlineUrl, classroomName });
+    const foundClass = await Class.create({ course, teachers, numberOfHours, date, classType: type, onlineUrl, classroomName });
     res.status(200).json(foundClass);
   } catch (error: unknown) {
     console.log(error);
@@ -43,7 +43,7 @@ classRouter.post("/:courseId", validateToken, validateTeacherOrStaffOrAdminRole,
 classRouter.put("/:classId", validateToken, validateTeacherOrStaffOrAdminRole, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const { course, teachers, numberOfHours, date, type, onlineUrl, classroomName } = req.body;
   try {
-    const foundClass = await Class.findByIdAndUpdate(req.params.classId, { course, teachers, numberOfHours, date, type, onlineUrl, classroomName });
+    const foundClass = await Class.findByIdAndUpdate(req.params.classId, { course, teachers, numberOfHours, date, classType: type, onlineUrl, classroomName });
     res.status(200).json(foundClass);
   } catch (error: unknown) {
     console.log(error);

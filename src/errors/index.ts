@@ -12,6 +12,10 @@ function handleErrors(app: Application) {
     // always logs the error
     console.error("ERROR", req.method, req.path, err);
 
+    if (err.message.includes("duplicate key")) {
+      return res.status(400).json({ message: "The document already exists in the DB." });
+    }
+
     // Sends a generic server error response if headers haven't been sent
     if (!res.headersSent) {
       res.status(500).json({
