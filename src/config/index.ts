@@ -18,6 +18,7 @@ function config(app: Application) {
       origin: [process.env.ORIGIN ?? "*"]
     })
   );
+  app.disable("etag");
   
   // ℹ️ Logs requests in the development environment
   app.use(logger("dev")); 
